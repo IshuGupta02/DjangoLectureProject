@@ -1,9 +1,9 @@
+"""
+store all urls for todo app here
+"""
 from django.urls import path
-
 from .views import index, detail, create, add, update_item, delete_item, delete_list
 from .views import sample
-
-
 
 app_name='todo'
 urlpatterns = [
@@ -15,5 +15,4 @@ urlpatterns = [
     path('update/<int:todolist_id>/<int:item_id>',update_item, name='update_item'),
     path('delete/<int:todolist_id>/<int:item_id>',delete_item, name='delete_item'),
     path('delete_list/<int:todolist_id>',delete_list, name='delete_list'),
-    
 ]

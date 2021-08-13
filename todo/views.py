@@ -1,30 +1,32 @@
+"""
+Contains all views
+"""
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-from django.template import loader
-from django.utils.timezone import now
+from django.http import Http404
 from .models import TodoList
 from .models import TodoItem
-from django.views.generic import TemplateView
 from .forms import InputForm_1
-from datetime import datetime
-
 
 def index(request):
+    """
+    Redirects to the index page
+    """
     todolists = TodoList.objects.all()
-    items = TodoItem.objects.all()
-    template = loader.get_template('todo/index.html')
-    context = {
-        'todolists': todolists,
+    context={
+        'todolists':todolists,
     }
-    return render(request, 'todo/index.html', context)
+    return render(request,'todo/index.html', context)
 
 def detail(request, list_id):
+    """
+    Shows details of all
+    items of a list
+    """
     try:
         todolist = TodoList.objects.get(id=list_id)
-    except TodoList.DoesNotExist:
-        raise Http404("This List Does not Exists")
+    except TodoList.DoesNotExist as does_not_exist:
+        raise Http404 from does_not_exist
     items_list = TodoItem.objects.filter(todo_list=todolist)
-    form = InputForm_1()
     context = {
         'todolist': todolist,
         'items_list': items_list,
@@ -32,6 +34,9 @@ def detail(request, list_id):
     return render(request, 'todo/detail.html', context)
 
 def create(request):
+    """
+    creates a new todo list
+    """
     if request.method == "GET":
         return render(request, 'todo/createlist.html')
 
@@ -40,60 +45,59 @@ def create(request):
     return redirect("../")
 
 def add(request, list_id):
-    
+    """
+    creates a new todo item
+    """
     todolist = TodoList.objects.get(id=list_id)
-    items_list = TodoItem.objects.filter(todo_list=todolist)
-    context = {
-        'todolist': todolist,
-        'items_list': items_list
-    }
 
     if request.method == "POST":
-
         name = request.POST["name"]
         date = request.POST["duetime"]
-        # print(date)
         TodoItem.objects.create(title=name,due_date=date,todo_list=todolist)
 
     return redirect("../"+str(list_id))
 
 def delete_item(request, todolist_id, item_id):
+    """
+    deletes a todo item
+    """
     TodoItem.objects.filter(id=item_id).delete()
-    try:
-        todolist = TodoList.objects.get(id=todolist_id)
-    except TodoList.DoesNotExist:
-        raise Http404("This List Does not Exists")
     return redirect("../../"+str(todolist_id))
 
 def update_item(request, todolist_id, item_id):
-    
-    todolist = TodoList.objects.get(id=todolist_id)
+    """
+    updates a todo item
+    """
     item= TodoItem.objects.get(id=item_id)
     context = {
         'item': item
     }
     if request.method == "POST":
+        # print(request.getAttribute())
         name = request.POST["item"]
         date = request.POST["duetime"]
         item.title= name
         item.due_date= date
-        
-        checked_ = request.POST["checked"]
-        if checked_=="on":
-            item.checked=True
-        else:
+        checked_= request.POST.get("checked", None)
+        if checked_ is None:
             item.checked=False
-        
+        else:
+            item.checked=True
         item.save()
         return redirect("../../"+str(todolist_id))
-    else:
-        return render(request, 'todo/update.html', context)
+    return render(request, 'todo/update.html', context)
 
 def delete_list(request, todolist_id):
+    """
+    deletes a todo list
+    """
     TodoList.objects.filter(id=todolist_id).delete()
     return redirect("../")
 
 def sample(request):
+    """
+    sample view to check Modelform
+    """
     if request.method == "POST":
         form = InputForm_1(request.POST)
         if form.is_valid():
@@ -102,3 +106,4 @@ def sample(request):
             print("Error ", form.errors)
     form = InputForm_1()
     return render(request, 'todo/sampleDateTime.html', {'form':form})
+    
