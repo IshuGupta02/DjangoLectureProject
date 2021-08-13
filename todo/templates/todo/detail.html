@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <!-- <script src="{% url 'js-catlog' %}"></script>
+        <script src="{% static '/admin/js/core.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'admin/css/widgets.css' %}"> -->
+        <title>{{todolist.list_name}}</title>
+        <style>
+        body {
+            display: flex; 
+            justify-content: center; 
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        body p {
+            align-self: center; 
+        }
+    </style>
+    </head>
+
+    <body>
+
+        <h1>{{todolist.list_name}}</h1>
+
+        <ul>
+            {% for item in items_list %}
+            <li>
+                {{item.title}}: {{item.id}}, {{item.due_date}}, {{item.checked}}, &nbsp;&nbsp;&nbsp;&nbsp; <a href="/todo/update/{{todolist.id}}/{{item.id}}">update</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="/todo/delete/{{todolist.id}}/{{item.id}}">delete</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <h1>Add New Item</h1>
+
+        <form action="/todo/{{todolist.id}}/add_item" method="post">
+            {% csrf_token %}
+            <h1>Add a task:</h1>
+            <label for="name">Task Name:</label><br>
+            <input type="text" name="name" id="name"><br>
+            <label for="duetime">Due Date:</label><br>
+            <input type="datetime-local" id="duetime" name="duetime">
+    
+            <input type="submit">
+        </form>
+
+        <a href="/todo">Go to Index</a>
+        
+    </body>

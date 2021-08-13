@@ -1,0 +1,28 @@
+<form action="" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <h3>Update {{item.title}}</h3>
+
+        <label for="item">  Item Name:  </label>
+        <input type="text" name="item" id="item" value={{item.title}}>
+        <br>
+
+        <label for="duetime">Due Date:</label><br>
+        <input type="datetime-local" id="duetime" name="duetime" value="{{item.due_date|date:'Y-m-d'}}T{{item.due_date|time:'H:i:s'}}">
+        <!-- <input type="datetime-local" required="" value="{{order.pick_up_datetime|date:'Y-m-d'}}T{{order.pick_up_datetime|time:'H:i:s'}}"> -->
+        <br>
+
+        {% if item.checked %}
+            <label for="checked">checked:</label><br>
+            <input type="checkbox" id="checked" name="checked" checked>
+        
+        {% else %}
+            <label for="checked">checked:</label><br>
+            <input type="radio" id="checked" name="checked">
+    
+        {% endif %}
+
+        <input type="submit">
+    </fieldset>
+
+</form>
