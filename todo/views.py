@@ -37,10 +37,6 @@ def create(request):
 
     name = request.POST["name"]
     TodoList.objects.create(list_name=name)
-    # lists = TodoList.objects.all()
-    # context = {
-    #     'todolists': lists,
-    # }
     return redirect("../")
 
 def add(request, list_id):
@@ -67,11 +63,6 @@ def delete_item(request, todolist_id, item_id):
         todolist = TodoList.objects.get(id=todolist_id)
     except TodoList.DoesNotExist:
         raise Http404("This List Does not Exists")
-    # items_list = TodoItem.objects.filter(todo_list=todolist)
-    # context = {
-    #     'todolist': todolist,
-    #     'items_list': items_list
-    # }
     return redirect("../../"+str(todolist_id))
 
 def update_item(request, todolist_id, item_id):
@@ -100,17 +91,8 @@ def update_item(request, todolist_id, item_id):
 
 def delete_list(request, todolist_id):
     TodoList.objects.filter(id=todolist_id).delete()
-
-    # todolists = TodoList.objects.all()
-    # # context = {
-    # #     'todolists': todolists,
-    # # }
     return redirect("../")
 
-# def sample(request):
-#     context ={}
-#     context['form']= InputForm()
-#     return render(request, "todo/sampleDateTime.html", context)
 def sample(request):
     if request.method == "POST":
         form = InputForm_1(request.POST)

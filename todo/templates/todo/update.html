@@ -9,7 +9,6 @@
 
         <label for="duetime">Due Date:</label><br>
         <input type="datetime-local" id="duetime" name="duetime" value="{{item.due_date|date:'Y-m-d'}}T{{item.due_date|time:'H:i:s'}}">
-        <!-- <input type="datetime-local" required="" value="{{order.pick_up_datetime|date:'Y-m-d'}}T{{order.pick_up_datetime|time:'H:i:s'}}"> -->
         <br>
 
         {% if item.checked %}
